@@ -11,11 +11,11 @@ const Url = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    longUrl: {
+    long_url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    shortUrl: {
+    short_url: {
       type: DataTypes.STRING,
       allowNull: false,
     },

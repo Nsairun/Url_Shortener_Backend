@@ -11,7 +11,7 @@ const User = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    userName: {
+    user_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -19,12 +19,12 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    emailAddress: {
+    email_address: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
     },
-    apiKey: {
+    api_key: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
