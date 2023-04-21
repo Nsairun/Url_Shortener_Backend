@@ -1,10 +1,7 @@
-const URL = require('../../models/urlModel');
-const bcrypt = require('bcrypt');
-const uuid = require('uuid');
 const Url = require('../../models/urlModel');
 
 const getAllUrl = async (_, res) => {
-  const urls = await URL.findAll();
+  const urls = await Url.findAll();
   res.status(200).send(urls);
 }
 
