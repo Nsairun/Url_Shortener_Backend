@@ -15,7 +15,7 @@ export default class UserController {
     const { user_name, password, email_address } = req.body;
 
     if (!(user_name && password && email_address)) {
-      return res.status(406).send("{ Missing User Info }");
+      return res.status(406).send({ message: 'Missing User Info' });
     }
 
     this.userService

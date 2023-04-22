@@ -14,18 +14,21 @@ export default class UserService {
   }
 
   async registerUser(user_name, password, email_address) {
-    bcrypt.hash(password, +process.env.SALT_ROUNDS, async (err, hash) => {
-      if (err) throw new Error("COULD_NOT_REGISTER_USER");
+    try {
+      const hash = await bcrypt.hash(password, +process.env.SALT_ROUNDS)
 
       const newUser = await this.userRepo.createUser({
         user_name,
         email_address,
         password: hash,
         api_key: uuid.v4(),
-      });
+      })
 
       return newUser;
-    });
+    }
+    catch(err) {
+      throw new Error("COULD_NOT_REGISTER_USER");
+    }
   }
 
   async editOneUser(userToEdit, id) {
