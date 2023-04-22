@@ -1,7 +1,5 @@
 import UserService from "./user.service";
 
-const User = require("../../models/userModel");
-
 export default class UserController {
   constructor() {
     this.userService = new UserService(); // all the methods using this.userService are methods from the UserService class
