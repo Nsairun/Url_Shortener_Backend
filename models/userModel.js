@@ -23,12 +23,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-    },
-    api_key: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+    }
   },
   {
     timestamp: true,

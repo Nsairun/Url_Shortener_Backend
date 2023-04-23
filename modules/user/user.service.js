@@ -3,7 +3,7 @@ import UserRepository from "./user.repo";
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
 
-export default class UserService {
+class UserService {
   constructor() {
     this.userRepo = new UserRepository(); // i've put all my sequelize functions in UserRepository().. things like findByPk(), findOne(), create(), update(), destroy()...
   }
@@ -21,7 +21,6 @@ export default class UserService {
         user_name,
         email_address,
         password: hash,
-        api_key: uuid.v4(),
       })
 
       return newUser;
@@ -57,3 +56,5 @@ export default class UserService {
     allready in the UserRepository class
   */
 }
+
+modulel.export = UserService;

@@ -1,6 +1,6 @@
 import User from "../../models/userModel";
 
-export default class UserRepository {
+class UserRepository {
   getAllUser() {
     return User.findAll();
   }
@@ -25,3 +25,5 @@ export default class UserRepository {
     return User.destroy({ where: { id } });
   }
 }
+
+module.exports = UserRepository;

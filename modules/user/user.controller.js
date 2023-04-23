@@ -1,6 +1,6 @@
 import UserService from "./user.service";
 
-export default class UserController {
+class UserController {
   constructor() {
     this.userService = new UserService(); // all the methods using this.userService are methods from the UserService class
   }
@@ -49,3 +49,5 @@ export default class UserController {
 
 //   res.status(202).send(updatedUser);
 // };
+
+module.exports = UserController;
