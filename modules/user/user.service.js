@@ -1,4 +1,4 @@
-import UserRepository from "./user.repo";
+const UserRepository = require("./user.repo");
 
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
@@ -57,4 +57,4 @@ class UserService {
   */
 }
 
-modulel.export = UserService;
+module.export = UserService;

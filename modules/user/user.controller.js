@@ -1,4 +1,4 @@
-import UserService from "./user.service";
+const UserService = require("./user.service");
 
 class UserController {
   constructor() {
@@ -49,5 +49,6 @@ class UserController {
 
 //   res.status(202).send(updatedUser);
 // };
+console.log('this userController in controller', UserController, new UserController())
 
 module.exports = UserController;
