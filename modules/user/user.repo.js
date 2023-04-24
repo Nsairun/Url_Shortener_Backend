@@ -10,7 +10,7 @@ class UserRepository {
   }
 
   getUserByEmail(email_address) {
-    return User.findOne({ wher: { email_address } });
+    return User.findOne({ where: { email_address } });
   }
 
   createUser(user) {

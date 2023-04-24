@@ -1,22 +1,27 @@
 const UserService = require("./user.service");
-console.log('this user', UserService)
 
 class UserController {
   constructor() {
     this.userService = new UserService(); // all the methods using this.userService are methods from the UserService class
   }
 
-  getAllUsers(req, res) {
-    this.userService.getAllUsers();
+  async getAllUsers(req, res) {
+    const allUsers = await this.userService.getAllUsers();
 
-    res.status(200).send(this.userService.getAllUsers());
+    res.status(200).send(allUsers);
+  }
+
+  async getOneUser(req, res) {
+    const user = await this.userService.getOneUser(+req.params.id);
+
+    res.status(200).send(user);
   }
 
   createOneUser(req, res) {
     const { user_name, password, email_address } = req.body;
 
     if (!(user_name && password && email_address)) {
-      return res.status(406).send({ message: 'Missing User Info' });
+      return res.status(406).send({ message: "Missing User Info" });
     }
 
     this.userService
@@ -26,7 +31,8 @@ class UserController {
   }
 
   patchOneUser(req, res) {
-    this.userService.editOneUser(req.body, id)
+    this.userService
+      .editOneUser(req.body, id)
       .then((updatedUser) => res.status(202).send(updatedUser))
       .catch((err) => res.status(401).send(err));
   }
@@ -51,6 +57,9 @@ class UserController {
 //   res.status(202).send(updatedUser);
 // };
 
-console.log('this userController in controller', UserController, new UserController())
+// const userService = new UserService();
+// const user = userService.getAllUsers().then((res) => console.log('\n this res', res));
+
+// console.log('\n \n get all users entered service \n \n', user);
 
 module.exports = UserController;

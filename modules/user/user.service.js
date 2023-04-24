@@ -1,7 +1,6 @@
 const UserRepository = require("./user.repo");
 
 const bcrypt = require("bcrypt");
-const uuid = require("uuid");
 
 class UserService {
   constructor() {
@@ -11,6 +10,11 @@ class UserService {
   async getAllUsers() {
     const allUsers = await this.userRepo.getAllUser();
     return allUsers;
+  }
+
+  async getOneUser(id) {
+    const user = await this.userRepo.getUserById(id);
+    return user;
   }
 
   async registerUser(user_name, password, email_address) {
@@ -56,5 +60,9 @@ class UserService {
     allready in the UserRepository class
   */
 }
+
+// user = new UserService().getAllUsers().then((res) => console.log('\n this res', res));
+
+// console.log('\n \n get all users entered service \n \n', user);
 
 module.exports = UserService;
