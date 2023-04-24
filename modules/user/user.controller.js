@@ -1,4 +1,5 @@
 const UserService = require("./user.service");
+console.log('this user', UserService)
 
 class UserController {
   constructor() {
@@ -8,7 +9,7 @@ class UserController {
   getAllUsers(req, res) {
     this.userService.getAllUsers();
 
-    res.status(200).send(this.userService.getAllUsers())
+    res.status(200).send(this.userService.getAllUsers());
   }
 
   createOneUser(req, res) {
@@ -49,6 +50,7 @@ class UserController {
 
 //   res.status(202).send(updatedUser);
 // };
+
 console.log('this userController in controller', UserController, new UserController())
 
 module.exports = UserController;
