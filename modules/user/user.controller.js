@@ -32,7 +32,7 @@ class UserController {
 
   patchOneUser(req, res) {
     this.userService
-      .editOneUser(req.body, id)
+      .editOneUser(req.body, +req.params.id)
       .then((updatedUser) => res.status(202).send(updatedUser))
       .catch((err) => res.status(401).send(err));
   }
@@ -44,22 +44,5 @@ class UserController {
       .catch((err) => res.status(500).send(err));
   }
 }
-
-// const patchOneUser = async (req, res) => {
-//   const user = await User.findOne({ where: { id: +req.params.id } });
-
-//   if (!user) return res.status(401).send("{ user does not exist }");
-
-//   await User.update(req.body, { where: { id: +req.params.id } });
-
-//   const updatedUser = await User.findOne({ where: { id: req.params.id } });
-
-//   res.status(202).send(updatedUser);
-// };
-
-// const userService = new UserService();
-// const user = userService.getAllUsers().then((res) => console.log('\n this res', res));
-
-// console.log('\n \n get all users entered service \n \n', user);
 
 module.exports = UserController;

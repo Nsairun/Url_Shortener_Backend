@@ -19,13 +19,13 @@ class UserService {
 
   async registerUser(user_name, password, email_address) {
     try {
-      const hash = await bcrypt.hash(password, +process.env.SALT_ROUNDS)
+      const hash = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
 
       const newUser = await this.userRepo.createUser({
         user_name,
         email_address,
         password: hash,
-      })
+      });
 
       return newUser;
     }
@@ -60,9 +60,5 @@ class UserService {
     allready in the UserRepository class
   */
 }
-
-// user = new UserService().getAllUsers().then((res) => console.log('\n this res', res));
-
-// console.log('\n \n get all users entered service \n \n', user);
 
 module.exports = UserService;

@@ -14,6 +14,10 @@ class UserRepository {
   }
 
   createUser(user) {
+    const oldUser = this.getUserByEmail(user.email_address);
+
+    if(oldUser.email_address) throw new Error('User Already Exist');
+
     return User.create(user);
   }
 
