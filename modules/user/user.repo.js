@@ -1,4 +1,5 @@
 const User = require("../../models/userModel");
+const { Op } = require("sequelize");
 
 class UserRepository {
   getAllUser() {
@@ -13,11 +14,14 @@ class UserRepository {
     return User.findOne({ where: { email_address } });
   }
 
+  getOnlineAndOfflineEmail(email_address) {
+    return User.findOne({
+      where: { email_address },
+      paranoid: false
+    });
+  }
+
   createUser(user) {
-    const oldUser = this.getUserByEmail(user.email_address);
-
-    if(oldUser.email_address) throw new Error('User Already Exist');
-
     return User.create(user);
   }
 

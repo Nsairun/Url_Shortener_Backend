@@ -22,23 +22,23 @@ class UrlController {
   }
 
   createOneUrl(req, res) {
-    const { long_url } = req.body;
+    const { long_url, UserId } = req.body;
 
     if (!long_url) {
-      return res.status(406).send({ message: "No Url Detected" });
+      return res.sendStatus(406); // not acceptable
     }
 
     this.urlService
-      .registerUrl(long_url)
+      .registerUrl({long_url, UserId})
       .then((url) => res.status(201).send(url))
-      .catch((err) => res.status(500).send(err));
+      .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 
   deleteOneUrl(req, res) {
     this.urlService
       .deleteOneUrl(+req.params.id)
       .then((statusCode) => res.sendStatus(statusCode))
-      .catch((err) => res.status(500).send(err));
+      .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 }
 

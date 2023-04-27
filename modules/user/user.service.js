@@ -19,18 +19,23 @@ class UserService {
 
   async registerUser(user_name, password, email_address) {
     try {
+      const duplicateUser = await this.userRepo.getOnlineAndOfflineEmail(email_address);
+
+      if (duplicateUser)
+        return { statusCode: 409, result: "USER_ALREADY_EXIST" };
+
       const hash = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
 
-      const newUser = await this.userRepo.createUser({
+      const result = await this.userRepo.createUser({
         user_name,
         email_address,
         password: hash,
       });
 
-      return newUser;
-    }
-    catch(err) {
-      throw new Error("COULD_NOT_REGISTER_USER");
+      return { statusCode: 201, result };
+    } catch(e) {
+      throw e
+      throw new Error("COULD_NOT_CREATE_USER");
     }
   }
 
@@ -48,7 +53,12 @@ class UserService {
 
   async deleteOneUser(id) {
     try {
+      const user = await this.userRepo.getUserById(id);
+
+      if (!user) return 404;
+
       await this.userRepo.dropUser(id);
+      return 202;
     } catch {
       throw new Error("COULD_NOT_DELETE_USER");
     }

@@ -6,14 +6,14 @@ class VisitorRepository {
     return Visitor.findAll();
   }
 
-  getAllByIp(ip_address, UrlId) {
+  getAllByIpAndUrldId(ip_address, UrlId) {
     return Visitor.findAll({
       where: {
         [Op.and]: [{ ip_address }, { UrlId }],
       },
     });
 
-    // return Visitor.findAll({ where: { ip_address, UrlId } });
+    //this defaults to the above Visitor.findAll({ where: { ip_address, UrlId } });
   }
 
   getVisitorById(id) {

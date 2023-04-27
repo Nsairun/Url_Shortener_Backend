@@ -17,20 +17,17 @@ class VisitorService {
 
   async registerOneVisitor(visitor) {
     try {
-      const duplicateVisitor = await this.visitorRepo.getAllByIp(visitor.ip_address, visitor.UrlId);
+      const duplicateVisit = await this.visitorRepo.getAllByIpAndUrldId(visitor.ip_address, visitor.UrlId);
 
-      if (duplicateVisitor.length > 0) {
-        console.log('\n this duplicateVisitor \n', duplicateVisitor[0].dataValues)
-
-        await this.visitorRepo.updateVisitor(visitor, duplicateVisitor[0].id);
+      if (duplicateVisit.length > 0) {
+        await this.visitorRepo.updateVisitor(visitor, duplicateVisit[0].id);
         return 208;
       }
 
       await this.visitorRepo.createOneVisitor(visitor);
 
       return 202;
-    } catch (e) {
-      return e;
+    } catch {
       throw new Error("COULD_NOT_REGISTER_VISITOR");
     }
   }

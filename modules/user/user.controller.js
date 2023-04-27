@@ -8,11 +8,15 @@ class UserController {
   async getAllUsers(_, res) {
     const allUsers = await this.userService.getAllUsers();
 
+    if (allUsers.length <= 0) return res.sendStatus(404);
+
     res.status(200).send(allUsers);
   }
 
   async getOneUser(req, res) {
     const user = await this.userService.getOneUser(+req.params.id);
+
+    if (!user) return res.sendStatus(404);
 
     res.status(200).send(user);
   }
@@ -26,22 +30,22 @@ class UserController {
 
     this.userService
       .registerUser(user_name, password, email_address)
-      .then((user) => res.status(201).send(user))
-      .catch((err) => res.status(500).send(err));
+      .then(({statusCode, result}) => res.status(statusCode).send(result))
+      .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 
   patchOneUser(req, res) {
     this.userService
       .editOneUser(req.body, +req.params.id)
       .then((updatedUser) => res.status(202).send(updatedUser))
-      .catch((err) => res.status(401).send(err));
+      .catch((err) => res.status(401).send(err.toLocaleString()));
   }
 
   deleteOneUser(req, res) {
     this.userService
       .deleteOneUser(+req.params.id)
-      .then(() => res.sendStatus(202))
-      .catch((err) => res.status(500).send(err));
+      .then((statusCode) => res.sendStatus(statusCode))
+      .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 }
 
