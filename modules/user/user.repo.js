@@ -1,5 +1,4 @@
 const User = require("../../models/userModel");
-const { Op } = require("sequelize");
 
 class UserRepository {
   getAllUser() {

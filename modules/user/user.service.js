@@ -1,4 +1,5 @@
 const UserRepository = require("./user.repo");
+const { SALT_ROUNDS } = require('../services/constants')
 
 const bcrypt = require("bcrypt");
 
@@ -24,7 +25,7 @@ class UserService {
       if (duplicateUser)
         return { statusCode: 409, result: "USER_ALREADY_EXIST" };
 
-      const hash = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
+      const hash = await bcrypt.hash(password, SALT_ROUNDS);
 
       const result = await this.userRepo.createUser({
         user_name,
