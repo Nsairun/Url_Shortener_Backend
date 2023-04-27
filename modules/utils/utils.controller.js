@@ -8,8 +8,6 @@ class UtilController {
   async login(req, res) {
     const { email_address, password } = req.body;
 
-    console.log("\n longin entered \n", email_address, password, "\n");
-
     await this.utilService
       .loginWithEmailPassword(email_address, password)
       .then((result) => {
