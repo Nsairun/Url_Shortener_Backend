@@ -8,11 +8,15 @@ class UrlController {
   async getAllUrls(_, res) {
     const allUrls = await this.urlService.getAllUrls();
 
+    if(allUrls.length <= 0) return res.sendStatus(404);
+
     res.status(200).send(allUrls);
   }
 
   async getOneUrl(req, res) {
     const url = await this.urlService.getOneUrl(+req.params.id);
+
+    if(!url) return res.sendStatus(404);
 
     res.status(200).send(url);
   }
@@ -33,7 +37,7 @@ class UrlController {
   deleteOneUrl(req, res) {
     this.urlService
       .deleteOneUrl(+req.params.id)
-      .then(() => res.sendStatus(202))
+      .then((statusCode) => res.sendStatus(statusCode))
       .catch((err) => res.status(500).send(err));
   }
 }

@@ -5,7 +5,7 @@ class UserController {
     this.userService = new UserService(); // all the methods using this.userService are methods from the UserService class
   }
 
-  async getAllUsers(req, res) {
+  async getAllUsers(_, res) {
     const allUsers = await this.userService.getAllUsers();
 
     res.status(200).send(allUsers);

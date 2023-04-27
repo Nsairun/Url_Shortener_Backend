@@ -32,7 +32,11 @@ class UrlService {
 
   async deleteOneUrl(id) {
     try {
+      const url = await this.getOneUrl(id);
+      if (!url) return 404;
+
       await this.urlRepo.dropUrl(id);
+      return 202;
     } catch {
       throw new Error("COULD_NOT_DELETE_URL");
     }
