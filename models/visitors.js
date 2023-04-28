@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require(".");
 
-const User = sequelize.define(
-  "User",
+const Visitor = sequelize.define(
+  "Visitor",
   {
     // Model attributes are defined here
     id: {
@@ -11,19 +11,21 @@ const User = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    user_name: {
+    location: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
+    ip_address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    time_clicked: {
+        type: DataTypes.DATE,
+    },
+    browser: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email_address: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    }
   },
   {
     timestamp: true,
@@ -31,4 +33,4 @@ const User = sequelize.define(
   }
 );
 
-module.exports = User;
+module.exports = Visitor;
