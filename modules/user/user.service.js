@@ -1,5 +1,5 @@
 const UserRepository = require("./user.repo");
-const { SALT_ROUNDS } = require('../services/constants')
+const { SALT_ROUNDS } = require("../services/constant");
 
 const bcrypt = require("bcrypt");
 
@@ -20,7 +20,9 @@ class UserService {
 
   async registerUser(user_name, password, email_address) {
     try {
-      const duplicateUser = await this.userRepo.getOnlineAndOfflineEmail(email_address);
+      const duplicateUser = await this.userRepo.getOnlineAndOfflineEmail(
+        email_address
+      );
 
       if (duplicateUser)
         return { statusCode: 409, result: "USER_ALREADY_EXIST" };
@@ -34,8 +36,7 @@ class UserService {
       });
 
       return { statusCode: 201, result };
-    } catch(e) {
-      throw e
+    } catch {
       throw new Error("COULD_NOT_CREATE_USER");
     }
   }

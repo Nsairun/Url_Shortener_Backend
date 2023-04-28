@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { JWT_PRIVATE_KEY } = require("../services/constants");
+const { JWT_PRIVATE_KEY } = require("../services/constant");
 
 class JWT {
   signToken(user) {
