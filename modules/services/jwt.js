@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const { JWT_PRIVATE_KEY } = require("../services/constants");
 
-class UtilRepository {
+class JWT {
   signToken(user) {
     return jwt.sign(
-      { bearer_id: user.id, break_email: user.email_address },
+      { bearer_id: user.id, bearer_email: user.email_address },
       JWT_PRIVATE_KEY,
       { expiresIn: "1h" }
     );
@@ -15,4 +15,4 @@ class UtilRepository {
   }
 }
 
-module.exports = UtilRepository;
+module.exports = JWT;

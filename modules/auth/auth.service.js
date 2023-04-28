@@ -1,5 +1,6 @@
 const User = require("../../models/userModel");
-const { verifyToken } = require("./jwt");
+const JWT = require("../services/jwt");
+const jwt = new JWT();
 
 const authMiddleware = async (req, res, next) => {
   const authorization = req.get("Authorization");
@@ -7,7 +8,7 @@ const authMiddleware = async (req, res, next) => {
 
   if (token) {
     try {
-      const { data } = verifyToken(token);
+      const { data } = jwt.verifyToken(token);
       const user = await User.findByPk(data.id);
       if (!user) return res.sendStatus(401);
       req.user = user;

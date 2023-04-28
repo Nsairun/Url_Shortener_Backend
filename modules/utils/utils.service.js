@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
 const UserRepository = require("../user/user.repo");
-const UtilRepository = require("./utils.repo");
+const JWT = require("../services/jwt");
 
 class UtilService {
   constructor() {
     this.userRepo = new UserRepository();
-    this.utilRepo = new UtilRepository();
+    this.jwt = new JWT();
   }
 
   async loginWithEmailPassword(emai_address, password) {
@@ -17,7 +17,7 @@ class UtilService {
 
     if (!match) throw new Error("CANNOT_LOGIN");
 
-    const token = this.utilRepo.signToken(user);
+    const token = this.jwt.signToken(user);
 
     if(user.dataValues.id && user.dataValues.password) user = user.dataValues
 
