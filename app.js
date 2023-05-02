@@ -4,11 +4,12 @@ const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
 const dotEnv = require("dotenv");
+swaggerUi = require("swagger-ui-express");
 dotEnv.config();
 
 const relate = require("./models/relationship");
+const specs = require("./modules/services/swagger");
 relate();
 
 const indexRouter = require("./routes/index");
@@ -22,12 +23,19 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {explorer: true})
+);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
