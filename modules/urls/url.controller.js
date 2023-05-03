@@ -1,4 +1,5 @@
-const UrlService = require('./url.service');
+const UrlService = require("./url.service");
+const shortid = require("shortid");
 
 class UrlController {
   constructor() {
@@ -8,7 +9,7 @@ class UrlController {
   async getAllUrls(_, res) {
     const allUrls = await this.urlService.getAllUrls();
 
-    if(allUrls.length <= 0) return res.sendStatus(404);
+    if (allUrls.length <= 0) return res.sendStatus(404);
 
     res.status(200).send(allUrls);
   }
@@ -16,7 +17,7 @@ class UrlController {
   async getOneUrl(req, res) {
     const url = await this.urlService.getOneUrl(+req.params.id);
 
-    if(!url) return res.sendStatus(404);
+    if (!url) return res.sendStatus(404);
 
     res.status(200).send(url);
   }
@@ -29,7 +30,7 @@ class UrlController {
     }
 
     this.urlService
-      .registerUrl({long_url, UserId})
+      .registerUrl({ long_url, UserId })
       .then((url) => res.status(201).send(url))
       .catch((err) => res.status(500).send(err.toLocaleString()));
   }
@@ -39,6 +40,13 @@ class UrlController {
       .deleteOneUrl(+req.params.id)
       .then((statusCode) => res.sendStatus(statusCode))
       .catch((err) => res.status(500).send(err.toLocaleString()));
+  }
+
+  redirectOneUrl(req, res) {
+    this.urlService
+      .getLongUrl(req.params.short_url)
+      .then((long_url) => res.sendStatus(statusCode).redirect(long_url))
+      .catch((err) => res.status(200).send(err.toLocaleString()));
   }
 }
 
