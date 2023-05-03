@@ -5,17 +5,17 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const dotEnv = require("dotenv");
-swaggerUi = require("swagger-ui-express");
 dotEnv.config();
 
 const relate = require("./models/relationship");
-const specs = require("./modules/services/swagger");
 relate();
+swaggerUi = require("swagger-ui-express");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const urlRouter = require("./routes/urls");
 const visitorRouter = require("./routes/visitors");
+const specs = require("./modules/services/swagger");
 
 const app = express();
 
@@ -23,6 +23,11 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -31,16 +36,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs, {explorer: true})
-);
-
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/urls", urlRouter);
 app.use("/visitors", visitorRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
