@@ -1,4 +1,5 @@
 const UrlService = require("./url.service");
+const shortid = require("shortid");
 
 class UrlController {
   constructor() {
@@ -41,6 +42,12 @@ class UrlController {
       .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 
+  redirectOneUrl(req, res) {
+    this.urlService
+      .getLongUrl(req.params.short_url)
+      .then((long_url) => res.sendStatus(statusCode).redirect(long_url))
+      .catch((err) => res.status(200).send(err.toLocaleString()));
+  }
 }
 
 module.exports = UrlController;
