@@ -10,8 +10,6 @@ router.post("/", urlController.createOneUrl.bind(urlController));
 
 router.get("/:id", urlController.getOneUrl.bind(urlController));
 
-router.get("/redirect/:short_url", urlController.redirectOneUrl.bind(urlController));
-
 router.delete("/:id", urlController.deleteOneUrl.bind(urlController));
 
 module.exports = router;
