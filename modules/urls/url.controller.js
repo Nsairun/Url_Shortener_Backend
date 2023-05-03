@@ -1,5 +1,4 @@
 const UrlService = require("./url.service");
-const shortid = require("shortid");
 
 class UrlController {
   constructor() {
