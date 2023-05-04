@@ -1,5 +1,4 @@
 const UrlService = require("./url.service");
-const shortid = require("shortid");
 
 class UrlController {
   constructor() {
@@ -23,14 +22,14 @@ class UrlController {
   }
 
   createOneUrl(req, res) {
-    const { long_url, UserId } = req.body;
+    const { long_url, short_url, UserId } = req.body;
 
-    if (!long_url) {
+    if (!long_url || !short_url) {
       return res.sendStatus(406); // not acceptable
     }
 
     this.urlService
-      .registerUrl({ long_url, UserId })
+      .registerUrl({ long_url, short_url, UserId })
       .then((url) => res.status(201).send(url))
       .catch((err) => res.status(500).send(err.toLocaleString()));
   }
