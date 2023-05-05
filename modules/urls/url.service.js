@@ -16,9 +16,10 @@ class UrlService {
   }
 
   async registerUrl(incoming) {
+
     try {
       const newUrl = await this.urlRepo.createUrl({
-        ...incoming,
+        ...incoming
       });
 
       return newUrl;
@@ -41,11 +42,11 @@ class UrlService {
 
   async getLongUrl(short) {
     try {
-      const { long_url } = await this.urlRepo.getByShortUrl(short);
+      const { long_url } = await this.urlRepo.getShortUrl(short);
 
       if (!long_url) throw new Error("NO_URL");
 
-      return long_url;
+      return { statusCode: 200, long_url };
     } catch {
       throw new Error("COULD_NOT_REDIRECT");
     }

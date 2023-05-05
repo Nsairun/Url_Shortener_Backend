@@ -19,7 +19,7 @@ class UrlRepository {
   }
 
   getShortUrl(short_url) {
-    return Url.findOne({ where: { short_url } })
+    return Url.findOne({ where: { short_url } });
   }
 }
 

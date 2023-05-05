@@ -44,8 +44,10 @@ class UrlController {
   redirectOneUrl(req, res) {
     this.urlService
       .getLongUrl(req.params.short_url)
-      .then((long_url) => res.sendStatus(statusCode).redirect(long_url))
-      .catch((err) => res.status(200).send(err.toLocaleString()));
+      .then(({ statusCode, long_url }) =>
+        res.status(statusCode).redirect(long_url)
+      )
+      .catch((err) => res.status(404).send(err.toLocaleString()));
   }
 }
 
