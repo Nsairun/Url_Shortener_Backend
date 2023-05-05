@@ -18,11 +18,11 @@
  *           description: The generated short Url
  *         clicks:
  *           type: number
- *           description: The number of clicks on the Url
+ *           description: The number of clicks on the short url
  *       example:
  *         id: 1
- *         long_url: kadji
- *         short_url: kadji
+ *         long_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+ *         short_url: http://localhost:3000/urls/shorty.com/BZyc8VsQS
  *         clicks: 23
  */
 
