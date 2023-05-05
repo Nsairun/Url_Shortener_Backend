@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
-const UserRepository = require("../user/user.repo");
 const JWT = require("../services/jwt");
+const UserRepository = require("../user/user.repo");
 
 class UtilService {
   constructor() {
@@ -19,7 +19,7 @@ class UtilService {
 
     const token = this.jwt.signToken(user);
 
-    if(user.dataValues.id && user.dataValues.password) user = user.dataValues
+    if (user.dataValues.id && user.dataValues.password) user = user.dataValues;
 
     return { user, token };
   }

@@ -8,8 +8,8 @@ const authMiddleware = async (req, res, next) => {
 
   if (token) {
     try {
-      const { data } = jwt.verifyToken(token);
-      const user = await User.findByPk(data.id);
+      const bearer = jwt.verifyToken(token);
+      const user = await User.findByPk(bearer.bearer_id);
       if (!user) return res.sendStatus(401);
       req.user = user;
       next();

@@ -16,14 +16,10 @@ class UrlService {
   }
 
   async registerUrl(incoming) {
-    try {
-      const short_url = incoming.long_url.includes("https")
-        ? incoming.long_url.split("https://").pop().split("/").shift()
-        : incoming.long_url.split("http://").pop().split("/").shift();
 
+    try {
       const newUrl = await this.urlRepo.createUrl({
-        ...incoming,
-        short_url,
+        ...incoming
       });
 
       return newUrl;
@@ -41,6 +37,18 @@ class UrlService {
       return 202;
     } catch {
       throw new Error("COULD_NOT_DELETE_URL");
+    }
+  }
+
+  async getLongUrl(short) {
+    try {
+      const { long_url } = await this.urlRepo.getShortUrl(short);
+
+      if (!long_url) throw new Error("NO_URL");
+
+      return { statusCode: 200, long_url };
+    } catch {
+      throw new Error("COULD_NOT_REDIRECT");
     }
   }
 }
