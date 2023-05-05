@@ -23,7 +23,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-    },
+    }
   },
   {
     timestamp: true,
