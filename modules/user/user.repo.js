@@ -16,7 +16,7 @@ class UserRepository {
   getOnlineAndOfflineEmail(email_address) {
     return User.findOne({
       where: { email_address },
-      paranoid: false
+      paranoid: false,
     });
   }
 
