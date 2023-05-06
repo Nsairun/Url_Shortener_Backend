@@ -112,6 +112,8 @@ router.post("/", urlController.createOneUrl.bind(urlController));
 
 router.get("/:id", urlController.getOneUrl.bind(urlController));
 
+router.get("/userId/:UserId", urlController.getUrlByUserId.bind(urlController));
+
 router.delete("/:id", urlController.deleteOneUrl.bind(urlController));
 
 module.exports = router;

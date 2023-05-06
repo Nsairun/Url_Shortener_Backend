@@ -33,7 +33,7 @@ class VisitorController {
 
     this.visitorService
       .registerOneVisitor(visitor)
-      .then((statusCode) => res.sendStatus(statusCode))
+      .then((statusCode) => res.send(statusCode))
       .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 

@@ -21,6 +21,14 @@ class UrlController {
     res.status(200).send(url);
   }
 
+  async getUrlByUserId(req, res) {
+    const userUrls = await this.urlService.getUrlByUserId(+req.params.UserId);
+
+    if (userUrls.length <= 0) return res.sendStatus(404);
+
+    res.status(200).send(userUrls);
+  }
+
   createOneUrl(req, res) {
     const { long_url, short_url, UserId } = req.body;
 
