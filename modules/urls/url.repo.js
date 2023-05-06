@@ -10,6 +10,10 @@ class UrlRepository {
     return Url.findByPk(id);
   }
 
+  getUrlByUserId(userId) {
+    return Url.findAll({ where: { userId } });
+  }
+
   createUrl(url) {
     return Url.create(url);
   }

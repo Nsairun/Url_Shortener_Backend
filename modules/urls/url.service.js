@@ -15,6 +15,11 @@ class UrlService {
     return url;
   }
 
+  async getUrlByUserId(id) {
+    const userUls = await this.urlRepo.getUrlByUserId(id);
+    return userUls;
+  }
+
   async registerUrl(incoming) {
 
     try {

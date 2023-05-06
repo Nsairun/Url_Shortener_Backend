@@ -1,6 +1,6 @@
 const UtilService = require("./utils.service");
 const MyCache = require("node-cache");
-const urlCache = new MyCache({stdTTL: 300});
+const urlCache = new MyCache({ stdTTL: 300 });
 
 class UtilController {
   constructor() {
@@ -25,11 +25,12 @@ class UtilController {
   }
 
   getCurrentUser(req, res) {
-    let { user } = req;
+    let { user, userUrls } = req;
     delete user.password;
     delete user.deletedAt;
     delete user.updatedAt;
-    res.status(200).send(user);
+
+    res.status(200).send({ user, userUrls });
   }
 
   redirectOneUrl(req, res) {
