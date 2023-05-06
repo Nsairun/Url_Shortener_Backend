@@ -1,4 +1,6 @@
 const UtilService = require("./utils.service");
+const MyCache = require("node-cache");
+const urlCache = new MyCache({stdTTL: 300});
 
 class UtilController {
   constructor() {
@@ -31,11 +33,17 @@ class UtilController {
   }
 
   redirectOneUrl(req, res) {
+    if (urlCache.has(req.params.short_url)) {
+      res.status(200).redirect(urlCache.get(req.params.short_url));
+      return;
+    }
+
     this.utilService
       .getLongUrl(req.params.short_url)
-      .then(({ statusCode, long_url }) =>
-        res.status(statusCode).redirect(long_url)
-      )
+      .then(({ statusCode, long_url }) => {
+        urlCache.set(req.params.short_url, long_url);
+        res.status(statusCode).redirect(long_url);
+      })
       .catch((err) => res.status(404).send(err.toLocaleString()));
   }
 }
