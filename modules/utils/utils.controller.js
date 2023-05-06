@@ -29,6 +29,15 @@ class UtilController {
     delete user.updatedAt;
     res.status(200).send(user);
   }
+
+  redirectOneUrl(req, res) {
+    this.utilService
+      .getLongUrl(req.params.short_url)
+      .then(({ statusCode, long_url }) =>
+        res.status(statusCode).redirect(long_url)
+      )
+      .catch((err) => res.status(404).send(err.toLocaleString()));
+  }
 }
 
 module.exports = UtilController;

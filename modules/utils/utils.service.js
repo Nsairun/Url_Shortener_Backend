@@ -1,10 +1,12 @@
 const bcrypt = require("bcrypt");
 const JWT = require("../services/jwt");
 const UserRepository = require("../user/user.repo");
+const UtilRepository = require("./utils.repo");
 
 class UtilService {
   constructor() {
     this.userRepo = new UserRepository();
+    this.utilRepo = new UtilRepository();
     this.jwt = new JWT();
   }
 
@@ -22,6 +24,18 @@ class UtilService {
     if (user.dataValues.id && user.dataValues.password) user = user.dataValues;
 
     return { user, token };
+  }
+
+  async getLongUrl(short) {
+    try {
+      const { long_url } = await this.utilRepo.getShortUrl(short);
+
+      if (!long_url) throw new Error("NO_URL");
+
+      return { statusCode: 200, long_url };
+    } catch {
+      throw new Error("COULD_NOT_REDIRECT");
+    }
   }
 }
 

@@ -17,10 +17,6 @@ class UrlRepository {
   dropUrl(id) {
     return Url.destroy({ where: { id } });
   }
-
-  getShortUrl(short_url) {
-    return Url.findOne({ where: { short_url } });
-  }
 }
 
 module.exports = UrlRepository;

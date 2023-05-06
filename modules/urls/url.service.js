@@ -39,18 +39,6 @@ class UrlService {
       throw new Error("COULD_NOT_DELETE_URL");
     }
   }
-
-  async getLongUrl(short) {
-    try {
-      const { long_url } = await this.urlRepo.getShortUrl(short);
-
-      if (!long_url) throw new Error("NO_URL");
-
-      return { statusCode: 200, long_url };
-    } catch {
-      throw new Error("COULD_NOT_REDIRECT");
-    }
-  }
 }
 
 module.exports = UrlService;

@@ -14,4 +14,6 @@ router.get("/current-user", authMiddleware, utilController.getCurrentUser.bind(u
 
 router.post("/login", utilController.login.bind(utilController));
 
+router.get("/shorty.com/:short_url", utilController.redirectOneUrl.bind(utilController));
+
 module.exports = router;
