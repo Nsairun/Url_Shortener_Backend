@@ -39,6 +39,7 @@ class VisitorController {
         },
       }
     );
+    console.log("\n \n this result \n", result, "\n");
 
     try {
       const data = result.unwrap();
@@ -46,9 +47,6 @@ class VisitorController {
     } catch {
       throw new Error("AN_ERRO_OCCURED_WHILE_GETTING_INFO");
     }
-
-    const ip = req.ip;
-    res.send({ ip });
   }
 
   async createOneVisitor(req, res) {
@@ -62,12 +60,12 @@ class VisitorController {
 
     this.getUserLocation(req, res, visitor);
 
-    return;
+    // return;
 
-    this.visitorService
-      .registerOneVisitor(visitor)
-      .then((statusCode) => res.send(statusCode))
-      .catch((err) => res.status(500).send(err.toLocaleString()));
+    // this.visitorService
+    //   .registerOneVisitor(visitor)
+    //   .then((statusCode) => res.send(statusCode))
+    //   .catch((err) => res.status(500).send(err.toLocaleString()));
   }
 
   async deleteOneVisitor(req, res) {
