@@ -1,5 +1,7 @@
-const { head } = require("../../routes/visitors");
+const { SuperfaceClient } = require("@superfaceai/one-sdk");
 const VisitorService = require("./Visitor.service");
+
+const sdk = new SuperfaceClient();
 
 class VisitorController {
   constructor() {
@@ -22,6 +24,33 @@ class VisitorController {
     res.status(200).send(visitor);
   }
 
+  async getUserLocation(req, res, visitor) {
+    const profile = await sdk.getProfile("address");
+    const result = await profile.getUseCase("IpGeolocation").perform(
+      {
+        ipAddress: visitor.ip_address,
+      },
+      {
+        provider: "ipdata",
+        security: {
+          apikey: {
+            apikey: "myapikeyblablabla",
+          },
+        },
+      }
+    );
+
+    try {
+      const data = result.unwrap();
+      return data;
+    } catch {
+      throw new Error("AN_ERRO_OCCURED_WHILE_GETTING_INFO");
+    }
+
+    const ip = req.ip;
+    res.send({ ip });
+  }
+
   async createOneVisitor(req, res) {
     const visitor = {
       location: "Kamer-Ngola",
@@ -30,6 +59,10 @@ class VisitorController {
       browser: req.headers["user-agent"],
       UrlId: +req.body.url_id,
     };
+
+    this.getUserLocation(req, res, visitor);
+
+    return;
 
     this.visitorService
       .registerOneVisitor(visitor)
