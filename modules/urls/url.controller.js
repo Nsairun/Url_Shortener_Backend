@@ -40,15 +40,6 @@ class UrlController {
       .then((statusCode) => res.sendStatus(statusCode))
       .catch((err) => res.status(500).send(err.toLocaleString()));
   }
-
-  redirectOneUrl(req, res) {
-    this.urlService
-      .getLongUrl(req.params.short_url)
-      .then(({ statusCode, long_url }) =>
-        res.status(statusCode).redirect(long_url)
-      )
-      .catch((err) => res.status(404).send(err.toLocaleString()));
-  }
 }
 
 module.exports = UrlController;
