@@ -12,8 +12,8 @@ class VisitorService {
     return allVisitors;
   }
 
-  async getOneVisitor(id) {
-    const visitor = await this.visitorRepo.getVisitorById(id);
+  async getVisitorsByUrlId(UrlId) {
+    const visitor = await this.visitorRepo.getVisitorByUrlId(UrlId);
     return visitor;
   }
 
@@ -24,18 +24,11 @@ class VisitorService {
         visitor.UrlId
       );
 
-      // const url = await this.urlRepo.getUrlById(visitor.UrlId);
-      // url.clicks = +url.clicks + 1;
-
-      // console.log('\n \n this updated url', url, '\n \n')
-
-      // this.urlRepo.updateUrlClicks(url);
-
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
-        url.clicks = +url.clicks + 1;
+        const newUrl = url.dataValues || url;
+        newUrl.clicks += 1;
 
-        console.log("\n \n this updated url", url.dataValues, "\n \n");
-        this.urlRepo.updateUrlClicks(url, url.id);
+        this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });
 
       if (duplicateVisit.length > 0) {
@@ -46,8 +39,7 @@ class VisitorService {
       await this.visitorRepo.createOneVisitor(visitor);
 
       return 202;
-    } catch (e) {
-      throw e;
+    } catch {
       throw new Error("COULD_NOT_REGISTER_VISITOR");
     }
   }
