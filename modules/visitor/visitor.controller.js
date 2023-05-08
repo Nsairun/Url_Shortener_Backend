@@ -1,4 +1,4 @@
-const { SuperfaceClient, err } = require("@superfaceai/one-sdk");
+const { SuperfaceClient } = require("@superfaceai/one-sdk");
 const VisitorService = require("./Visitor.service");
 const UrlService = require("../urls/url.service");
 
