@@ -18,6 +18,10 @@ class UrlRepository {
     return Url.create(url);
   }
 
+  updateUrlClicks(url, id) {
+    return Url.update(url, { where: { id } });
+  }
+
   dropUrl(id) {
     return Url.destroy({ where: { id } });
   }

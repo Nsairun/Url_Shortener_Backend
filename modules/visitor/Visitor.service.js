@@ -1,8 +1,10 @@
+const UrlRepository = require("../urls/url.repo");
 const VisitorRepository = require("./visitor.repo");
 
 class VisitorService {
   constructor() {
     this.visitorRepo = new VisitorRepository();
+    this.urlRepo = new UrlRepository();
   }
 
   async getAllVisitors() {
@@ -21,6 +23,20 @@ class VisitorService {
         visitor.ip_address,
         visitor.UrlId
       );
+
+      // const url = await this.urlRepo.getUrlById(visitor.UrlId);
+      // url.clicks = +url.clicks + 1;
+
+      // console.log('\n \n this updated url', url, '\n \n')
+
+      // this.urlRepo.updateUrlClicks(url);
+
+      await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
+        url.clicks = +url.clicks + 1;
+
+        console.log("\n \n this updated url", url.dataValues, "\n \n");
+        this.urlRepo.updateUrlClicks(url, url.id);
+      });
 
       if (duplicateVisit.length > 0) {
         await this.visitorRepo.updateVisitor(visitor, duplicateVisit[0].id);
