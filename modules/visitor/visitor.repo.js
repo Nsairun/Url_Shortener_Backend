@@ -16,8 +16,8 @@ class VisitorRepository {
     //this defaults to the above Visitor.findAll({ where: { ip_address, UrlId } });
   }
 
-  getVisitorById(id) {
-    return Visitor.findByPk(id);
+  getVisitorByUrlId(UrlId) {
+    return Visitor.findAll({ where: { UrlId } });
   }
 
   updateVisitor(visitor, id) {

@@ -18,6 +18,14 @@ class UrlRepository {
     return Url.create(url);
   }
 
+  updateUrlClicks(url, id) {
+    return Url.update(url, { where: { id } });
+  }
+
+  getUrlByShortUrl(short_url) {
+    return Url.findOne({ where: { short_url } });
+  }
+
   dropUrl(id) {
     return Url.destroy({ where: { id } });
   }

@@ -1,8 +1,10 @@
+const UrlRepository = require("../urls/url.repo");
 const VisitorRepository = require("./visitor.repo");
 
 class VisitorService {
   constructor() {
     this.visitorRepo = new VisitorRepository();
+    this.urlRepo = new UrlRepository();
   }
 
   async getAllVisitors() {
@@ -10,28 +12,34 @@ class VisitorService {
     return allVisitors;
   }
 
-  async getOneVisitor(id) {
-    const visitor = await this.visitorRepo.getVisitorById(id);
+  async getVisitorsByUrlId(UrlId) {
+    const visitor = await this.visitorRepo.getVisitorByUrlId(UrlId);
     return visitor;
   }
 
   async registerOneVisitor(visitor) {
     try {
-      // const duplicateVisit = await this.visitorRepo.getAllByIpAndUrldId(
-      //   visitor.ip_address,
-      //   visitor.UrlId
-      // );
+      const duplicateVisit = await this.visitorRepo.getAllByIpAndUrldId(
+        visitor.ip_address,
+        visitor.UrlId
+      );
 
-      // if (duplicateVisit.length > 0) {
-      //   await this.visitorRepo.updateVisitor(visitor, duplicateVisit[0].id);
-      //   return 208;
-      // }
+      await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
+        const newUrl = url.dataValues || url;
+        newUrl.clicks += 1;
+
+        this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
+      });
+
+      if (duplicateVisit.length > 0) {
+        await this.visitorRepo.updateVisitor(visitor, duplicateVisit[0].id);
+        return 208;
+      }
 
       await this.visitorRepo.createOneVisitor(visitor);
 
       return 202;
-    } catch (e) {
-      throw e;
+    } catch {
       throw new Error("COULD_NOT_REGISTER_VISITOR");
     }
   }

@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "address/ip-geolocation": {
+      "version": "1.0.1",
+      "providers": {
+        "ipgeolocation": {}
+      },
+      "priority": [
+        "ipgeolocation"
+      ]
+    }
+  },
+  "providers": {
+    "ipgeolocation": {
+      "security": [
+        {
+          "id": "apikey",
+          "apikey": "$IPGEOLOCATION_API_KEY"
+        }
+      ]
+    }
+  }
+}

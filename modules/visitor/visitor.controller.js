@@ -1,9 +1,13 @@
-const { head } = require("../../routes/visitors");
+const { SuperfaceClient } = require("@superfaceai/one-sdk");
 const VisitorService = require("./Visitor.service");
+const UrlService = require("../urls/url.service");
+
+const sdk = new SuperfaceClient();
 
 class VisitorController {
   constructor() {
     this.visitorService = new VisitorService();
+    this.urlService = new UrlService();
   }
 
   async getAllVistors(_, res) {
@@ -14,27 +18,54 @@ class VisitorController {
     res.status(200).send(allVisitors);
   }
 
-  async getOneVistor(req, res) {
-    const visitor = await this.visitorService.getOneVisitor(+req.params.id);
+  async getVisitorsByUrlId(req, res) {
+    const visitor = await this.visitorService.getVisitorsByUrlId(
+      +req.params.id
+    );
 
     if (!visitor) return res.sendStatus(404);
 
     res.status(200).send(visitor);
   }
 
-  async createOneVisitor(req, res) {
-    const visitor = {
-      location: "Kamer-Ngola",
-      ip_address: req.socket.remoteAddress || req.ip,
-      time_clicked: new Date().toLocaleString(),
-      browser: req.headers["user-agent"],
-      UrlId: +req.body.url_id,
-    };
+  async getUserLocation(ip_address) {
+    const profile = await sdk.getProfile("address/ip-geolocation");
 
-    this.visitorService
-      .registerOneVisitor(visitor)
-      .then((statusCode) => res.send(statusCode))
-      .catch((err) => res.status(500).send(err.toLocaleString()));
+    const result = await profile
+      .getUseCase("IpGeolocation")
+      .perform({ ip_address });
+
+    try {
+      const data = result.unwrap();
+      return data;
+    } catch (error) {
+      return { addressCountry: "unkown", addressLocality: "unkown" };
+    }
+  }
+
+  async createOneVisitor(req, short_url) {
+    try {
+      await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
+        async ({ addressCountry, addressLocality }) => {
+          await this.urlService
+            .getUrlByShortUrl(short_url)
+            .then(async (res) => {
+              const url = res.dataValues || res;
+              const visitor = {
+                location: addressCountry + "-" + addressLocality,
+                ip_address: req.socket.remoteAddress || req.ip,
+                time_clicked: new Date().toLocaleString(),
+                browser: req.headers["user-agent"],
+                UrlId: url.id,
+              };
+
+              await this.visitorService.registerOneVisitor(visitor);
+            });
+        }
+      );
+    } catch (err) {
+      throw err
+    }
   }
 
   async deleteOneVisitor(req, res) {

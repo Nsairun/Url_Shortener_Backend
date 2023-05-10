@@ -1,4 +1,5 @@
 const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
+const IPGEOLOCATION_API_KEY = process.env.IPGEOLOCATION_API_KEY
 
-module.exports = { SALT_ROUNDS, JWT_PRIVATE_KEY };
+module.exports = { SALT_ROUNDS, JWT_PRIVATE_KEY, IPGEOLOCATION_API_KEY };
