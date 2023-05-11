@@ -45,7 +45,7 @@ class VisitorController {
     const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
 
     const geolocationParams = new GeolocationParams();
-    geolocationParams.setIPAddress(ip_address);
+    geolocationParams.setIPAddress("154.72.160.145" || ip_address);
 
     ipgeolocationApi.getGeolocation((json) => { 
       console.log(2)
