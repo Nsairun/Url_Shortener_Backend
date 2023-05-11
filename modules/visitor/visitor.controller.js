@@ -32,7 +32,7 @@ class VisitorController {
   async getUserLocation(ip_address) {
     function handleResponse(json) {
       // i prolly could still write a call back in ipgeolocatinApi.getGeolocation(handleResponse, geolocationParams);
-      if (!(country_name && city)) {
+      if (!(json.country_name && json.city)) {
         res.country_name = "Unkown";
         res.city = "unkown";
         return;
