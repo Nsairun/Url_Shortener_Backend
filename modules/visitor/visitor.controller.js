@@ -29,25 +29,34 @@ class VisitorController {
     res.status(200).send(visitor);
   }
 
-  async getUserLocation(ip_address) {
-    function handleResponse(json) {
-      // i prolly could still write a call back in ipgeolocatinApi.getGeolocation(handleResponse, geolocationParams);
-      if (!(json.country_name && json.city)) {
-        res.country_name = "Unkown";
-        res.city = "unkown";
-        return;
-      }
+  // function handleResponse(json) {
+  //   // i prolly could still write a call back in ipgeolocationApi.getGeolocation(handleResponse, geolocationParams);
+  //   const { country_name, city } = json;
 
-      res = json;
-    }
+  //   res = { country_name, city };
+
+  //   console.log("\n this json", res, "\n");
+  // }
+
+  async getUserLocation(ip_address) {
+    console.log(1)
     let res = {};
 
-    const ipgeolocatinApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
+    const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
 
     const geolocationParams = new GeolocationParams();
-    geolocationParams.setIPAddress(ip_address);
+    geolocationParams.setIPAddress("154.72.160.145" || ip_address);
 
-    ipgeolocatinApi.getGeolocation(handleResponse, geolocationParams);
+    ipgeolocationApi.getGeolocation((json) => { 
+      console.log(2)
+      const { country_name, city } = json;
+
+       res = { country_name, city };
+
+      console.log("\n this json", res, "\n");
+    }, geolocationParams);
+
+    console.log("\n this res", res, "\n");
 
     return res;
   }
@@ -56,17 +65,22 @@ class VisitorController {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
         async ({ country_name, city }) => {
+          console.log(3);
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {
+              console.log(4);
               const url = res.dataValues || res;
               const visitor = {
-                location: country_name + "-" + city,
+                location:
+                  (country_name || "Cameroon") + "-" + (city || "Yaounde"),
                 ip_address: req.socket.remoteAddress || req.ip,
                 time_clicked: new Date().toLocaleString(),
                 browser: req.headers["user-agent"],
                 UrlId: url.id,
               };
+
+              console.log("\n this visitor", visitor, "\n");
 
               await this.visitorService.registerOneVisitor(visitor);
             });
