@@ -1,8 +1,9 @@
-const { SuperfaceClient } = require("@superfaceai/one-sdk");
+const IPGeolocationAPI = require("ip-geolocation-api-javascript-sdk");
+const GeolocationParams = require("ip-geolocation-api-javascript-sdk/GeolocationParams");
+
 const VisitorService = require("./Visitor.service");
 const UrlService = require("../urls/url.service");
-
-const sdk = new SuperfaceClient();
+const { IPGEOLOCATION_API_KEY } = require("../services/constant");
 
 class VisitorController {
   constructor() {
@@ -29,30 +30,38 @@ class VisitorController {
   }
 
   async getUserLocation(ip_address) {
-    const profile = await sdk.getProfile("address/ip-geolocation");
+    function handleResponse(json) {
+      // i prolly could still write a call back in ipgeolocatinApi.getGeolocation(handleResponse, geolocationParams);
+      if (!(country_name && city)) {
+        res.country_name = "Unkown";
+        res.city = "unkown";
+        return;
+      }
 
-    const result = await profile
-      .getUseCase("IpGeolocation")
-      .perform({ ip_address });
-
-    try {
-      const data = result.unwrap();
-      return data;
-    } catch (error) {
-      return { addressCountry: "unkown", addressLocality: "unkown" };
+      res = json;
     }
+    let res = {};
+
+    const ipgeolocatinApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
+
+    const geolocationParams = new GeolocationParams();
+    geolocationParams.setIPAddress(ip_address);
+
+    ipgeolocatinApi.getGeolocation(handleResponse, geolocationParams);
+
+    return res;
   }
 
   async createOneVisitor(req, short_url) {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
-        async ({ addressCountry, addressLocality }) => {
+        async ({ country_name, city }) => {
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {
               const url = res.dataValues || res;
               const visitor = {
-                location: addressCountry + "-" + addressLocality,
+                location: country_name + "-" + city,
                 ip_address: req.socket.remoteAddress || req.ip,
                 time_clicked: new Date().toLocaleString(),
                 browser: req.headers["user-agent"],
@@ -64,7 +73,7 @@ class VisitorController {
         }
       );
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
