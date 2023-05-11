@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const Url = require("../../models/urlModel");
 
 class UrlRepository {

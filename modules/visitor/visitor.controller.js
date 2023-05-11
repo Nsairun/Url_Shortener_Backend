@@ -1,8 +1,9 @@
-const { SuperfaceClient } = require("@superfaceai/one-sdk");
+const IPGeolocationAPI = require("ip-geolocation-api-javascript-sdk");
+const GeolocationParams = require("ip-geolocation-api-javascript-sdk/GeolocationParams");
+
 const VisitorService = require("./Visitor.service");
 const UrlService = require("../urls/url.service");
-
-const sdk = new SuperfaceClient();
+const { IPGEOLOCATION_API_KEY } = require("../services/constant");
 
 class VisitorController {
   constructor() {
@@ -28,43 +29,65 @@ class VisitorController {
     res.status(200).send(visitor);
   }
 
+  // function handleResponse(json) {
+  //   // i prolly could still write a call back in ipgeolocationApi.getGeolocation(handleResponse, geolocationParams);
+  //   const { country_name, city } = json;
+
+  //   res = { country_name, city };
+
+  //   console.log("\n this json", res, "\n");
+  // }
+
   async getUserLocation(ip_address) {
-    const profile = await sdk.getProfile("address/ip-geolocation");
+    console.log(1)
+    let res = {};
 
-    const result = await profile
-      .getUseCase("IpGeolocation")
-      .perform({ ip_address });
+    const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
 
-    try {
-      const data = result.unwrap();
-      return data;
-    } catch (error) {
-      return { addressCountry: "unkown", addressLocality: "unkown" };
-    }
+    const geolocationParams = new GeolocationParams();
+    geolocationParams.setIPAddress(ip_address);
+
+    ipgeolocationApi.getGeolocation((json) => { 
+      console.log(2)
+      const { country_name, city } = json;
+
+       res = { country_name, city };
+
+      console.log("\n this json", res, "\n");
+    }, geolocationParams);
+
+    console.log("\n this res", res, "\n");
+
+    return res;
   }
 
   async createOneVisitor(req, short_url) {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
-        async ({ addressCountry, addressLocality }) => {
+        async ({ country_name, city }) => {
+          console.log(3);
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {
+              console.log(4);
               const url = res.dataValues || res;
               const visitor = {
-                location: addressCountry + "-" + addressLocality,
+                location:
+                  (country_name || "Cameroon") + "-" + (city || "Yaounde"),
                 ip_address: req.socket.remoteAddress || req.ip,
                 time_clicked: new Date().toLocaleString(),
                 browser: req.headers["user-agent"],
                 UrlId: url.id,
               };
 
+              console.log("\n this visitor", visitor, "\n");
+
               await this.visitorService.registerOneVisitor(visitor);
             });
         }
       );
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
