@@ -6,8 +6,8 @@ class VisitorRepository {
     return Visitor.findAll();
   }
 
-  getAllByIpAndUrldId(ip_address, UrlId) {
-    return Visitor.findAll({
+  getOneByIpAndUrldId(ip_address, UrlId) {
+    return Visitor.findOne({
       where: {
         [Op.and]: [{ ip_address }, { UrlId }],
       },

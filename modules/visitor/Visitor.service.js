@@ -19,7 +19,7 @@ class VisitorService {
 
   async registerOneVisitor(visitor) {
     try {
-      const duplicateVisit = await this.visitorRepo.getAllByIpAndUrldId(
+      const duplicateVisit = await this.visitorRepo.getOneByIpAndUrldId(
         visitor.ip_address,
         visitor.UrlId
       );
@@ -31,8 +31,8 @@ class VisitorService {
         this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });
 
-      if (duplicateVisit.length > 0) {
-        await this.visitorRepo.updateVisitor(visitor, duplicateVisit[0].id);
+      if (duplicateVisit.location && duplicateVisit.time_clicked) {
+        await this.visitorRepo.updateVisitor(visitor, duplicateVisit.id);
         return 208;
       }
 
