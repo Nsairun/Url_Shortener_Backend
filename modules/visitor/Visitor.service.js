@@ -19,10 +19,10 @@ class VisitorService {
 
   async registerOneVisitor(visitor) {
     try {
-      const duplicateVisit = await this.visitorRepo.getOneByIpAndUrldId(
-        visitor.ip_address,
-        visitor.UrlId
-      );
+      // const duplicateVisit = await this.visitorRepo.getOneByIpAndUrldId(
+      //   visitor.ip_address,
+      //   visitor.UrlId
+      // );
 
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
         const newUrl = url.dataValues || url;
@@ -31,10 +31,10 @@ class VisitorService {
         this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });
 
-      if (duplicateVisit.location && duplicateVisit.time_clicked) {
-        await this.visitorRepo.updateVisitor(visitor, duplicateVisit.id);
-        return 208;
-      }
+      // if (duplicateVisit.location && duplicateVisit.time_clicked) {
+      //   await this.visitorRepo.updateVisitor(visitor, duplicateVisit.id);
+      //   return 208;
+      // }
 
       await this.visitorRepo.createOneVisitor(visitor);
 
