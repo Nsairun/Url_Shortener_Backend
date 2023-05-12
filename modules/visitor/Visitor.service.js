@@ -27,11 +27,12 @@ class VisitorService {
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
         const newUrl = url.dataValues || url;
         newUrl.clicks += 1;
+        console.log('\n this newUrl', newUrl, '\n')
 
         this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });
 
-      if (duplicateVisit.location && duplicateVisit.time_clicked) {
+      if (duplicateVisit) {
         await this.visitorRepo.updateVisitor(visitor, duplicateVisit.id);
         return 208;
       }

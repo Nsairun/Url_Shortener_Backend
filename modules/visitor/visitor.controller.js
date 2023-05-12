@@ -59,7 +59,6 @@ class VisitorController {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
         async ({ country_name, city }) => {
-          console.log(3);
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {

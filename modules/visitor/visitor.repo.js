@@ -13,7 +13,7 @@ class VisitorRepository {
       },
     });
 
-    //this defaults to the above Visitor.findAll({ where: { ip_address, UrlId } });
+    //this defaults to the above Visitor.findOne({ where: { ip_address, UrlId } });
   }
 
   getVisitorByUrlId(UrlId) {
