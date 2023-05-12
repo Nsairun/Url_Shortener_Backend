@@ -33,7 +33,7 @@ app.use(
 app.use(logger("dev"));
 app.use(express.json());
 app.use(cors({
-  origin: 'https://shorty-mu.vercel.app/', // to allow request only from https://shorty-mu.vercel.app/
+  origin: 'http://localhost:3001', // to allow request only from https://shorty-mu.vercel.app/
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

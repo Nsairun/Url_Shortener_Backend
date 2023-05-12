@@ -46,11 +46,10 @@ class VisitorController {
     const geolocationParams = new GeolocationParams();
     geolocationParams.setIPAddress(ip_address);
 
-    ipgeolocationApi.getGeolocation((json) => { 
+    ipgeolocationApi.getGeolocation((json) => {
       const { country_name, city } = json;
 
        res = { country_name, city };
-
     }, geolocationParams);
 
     return res;
