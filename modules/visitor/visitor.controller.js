@@ -67,7 +67,7 @@ class VisitorController {
               const visitor = {
                 location:
                   (country_name || "Cameroon") + "-" + (city || "Yaounde"),
-                ip_address: req.socket.remoteAddress || req.ip,
+                ip_address: req.ip || req.socket.remoteAddress,
                 time_clicked: new Date().toLocaleString(),
                 browser: req.headers["user-agent"],
                 UrlId: url.id,
