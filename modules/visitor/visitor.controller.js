@@ -39,7 +39,6 @@ class VisitorController {
   // }
 
   async getUserLocation(ip_address) {
-    console.log(1)
     let res = {};
 
     const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
@@ -48,15 +47,11 @@ class VisitorController {
     geolocationParams.setIPAddress(ip_address);
 
     ipgeolocationApi.getGeolocation((json) => { 
-      console.log(2)
       const { country_name, city } = json;
 
        res = { country_name, city };
 
-      console.log("\n this json", res, "\n");
     }, geolocationParams);
-
-    console.log("\n this res", res, "\n");
 
     return res;
   }
@@ -65,11 +60,9 @@ class VisitorController {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
         async ({ country_name, city }) => {
-          console.log(3);
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {
-              console.log(4);
               const url = res.dataValues || res;
               const visitor = {
                 location:
@@ -79,8 +72,6 @@ class VisitorController {
                 browser: req.headers["user-agent"],
                 UrlId: url.id,
               };
-
-              console.log("\n this visitor", visitor, "\n");
 
               await this.visitorService.registerOneVisitor(visitor);
             });
