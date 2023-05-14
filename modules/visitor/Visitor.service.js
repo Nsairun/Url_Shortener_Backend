@@ -12,9 +12,17 @@ class VisitorService {
     return allVisitors;
   }
 
-  async getVisitorsByUrlId(UrlId) {
-    const visitor = await this.visitorRepo.getVisitorByUrlId(UrlId);
-    return visitor;
+  async getVisitorsByUrlIdOrshort(UrlIdOrShort) {
+    if (!+new Number(UrlIdOrShort)) {
+      // checking if UrlIdOrShort is not a number
+      const url = await this.urlRepo.getUrlByShortUrl(UrlIdOrShort);
+      const visitors = await this.visitorRepo.getVisitorsByUrlId(UrlIdOrShort);
+      return { visitors, url };
+    }
+
+    const visitors = await this.visitorRepo.getVisitorsByUrlId(UrlIdOrShort);
+    const url = await this.urlRepo.getUrlById(UrlIdOrShort);
+    return { visitors, url };
   }
 
   async registerOneVisitor(visitor) {
@@ -27,7 +35,6 @@ class VisitorService {
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
         const newUrl = url.dataValues || url;
         newUrl.clicks += 1;
-        console.log('\n this newUrl', newUrl, '\n')
 
         this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });

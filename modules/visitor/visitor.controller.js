@@ -19,14 +19,12 @@ class VisitorController {
     res.status(200).send(allVisitors);
   }
 
-  async getVisitorsByUrlId(req, res) {
-    const visitor = await this.visitorService.getVisitorsByUrlId(
-      +req.params.id
-    );
+  async getVisitorsByUrlIdOrshort(req, res) {
+    const data = await this.visitorService.getVisitorsByUrlIdOrshort(req.params.id);
 
-    if (!visitor) return res.sendStatus(404);
+    if (!(data.visitors && data.url)) return res.sendStatus(404);
 
-    res.status(200).send(visitor);
+    res.status(200).send(data);
   }
 
   // function handleResponse(json) {
@@ -49,7 +47,7 @@ class VisitorController {
     ipgeolocationApi.getGeolocation((json) => {
       const { country_name, city } = json;
 
-       res = { country_name, city };
+      res = { country_name, city };
     }, geolocationParams);
 
     return res;

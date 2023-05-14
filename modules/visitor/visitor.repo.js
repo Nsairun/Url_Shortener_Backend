@@ -16,7 +16,7 @@ class VisitorRepository {
     //this defaults to the above Visitor.findOne({ where: { ip_address, UrlId } });
   }
 
-  getVisitorByUrlId(UrlId) {
+  getVisitorsByUrlId(UrlId) {
     return Visitor.findAll({ where: { UrlId } });
   }
 
