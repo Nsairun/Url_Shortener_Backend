@@ -14,8 +14,8 @@ class VisitorService {
 
   async getVisitorsByUrlIdOrshort(UrlIdOrShort) {
     let url = {};
-    if (!+new Number(UrlIdOrShort)) {
-      // checking if UrlIdOrShort is not a number
+    if (isNaN(UrlIdOrShort)) {
+      // checking if UrlIdOrShort is not a number. atfirst i used this: if(!+new Number(UrlIdOrShort)) {...}
       url = await this.urlRepo.getUrlByShortUrl(UrlIdOrShort);
     } else url = await this.urlRepo.getUrlById(UrlIdOrShort);
 
@@ -45,7 +45,10 @@ class VisitorService {
       });
 
       if (duplicateVisit) {
-        await this.visitorRepo.updateVisitor(visitor, duplicateVisit.id);
+        await this.visitorRepo.updateVisitor(
+          visitor,
+          duplicateVisit.dataValues.id || duplicateVisit.id
+        );
         return 208;
       }
 

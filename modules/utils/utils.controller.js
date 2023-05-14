@@ -42,7 +42,7 @@ class UtilController {
       return;
     }
 
-    this.utilService
+   await this.utilService
       .getLongUrl(req.params.short_url)
       .then(({ statusCode, long_url }) => {
         urlCache.set(req.params.short_url, long_url);
