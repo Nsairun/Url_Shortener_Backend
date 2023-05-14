@@ -13,15 +13,20 @@ class VisitorService {
   }
 
   async getVisitorsByUrlIdOrshort(UrlIdOrShort) {
+    let url = {};
     if (!+new Number(UrlIdOrShort)) {
       // checking if UrlIdOrShort is not a number
-      const url = await this.urlRepo.getUrlByShortUrl(UrlIdOrShort);
-      const visitors = await this.visitorRepo.getVisitorsByUrlId(UrlIdOrShort);
-      return { visitors, url };
-    }
+      url = await this.urlRepo.getUrlByShortUrl(UrlIdOrShort);
+    } else url = await this.urlRepo.getUrlById(UrlIdOrShort);
 
-    const visitors = await this.visitorRepo.getVisitorsByUrlId(UrlIdOrShort);
-    const url = await this.urlRepo.getUrlById(UrlIdOrShort);
+    const visitors = (
+      await this.visitorRepo.getVisitorsByUrlId(url.dataValues.id || url.id)
+    ).map((visitor) => {
+      const holder = visitor.dataValues || visitor;
+      delete holder.ip_address;
+      return holder;
+    });
+
     return { visitors, url };
   }
 

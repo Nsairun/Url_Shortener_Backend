@@ -20,7 +20,9 @@ class VisitorController {
   }
 
   async getVisitorsByUrlIdOrshort(req, res) {
-    const data = await this.visitorService.getVisitorsByUrlIdOrshort(req.params.id);
+    const data = await this.visitorService.getVisitorsByUrlIdOrshort(
+      req.params.id
+    );
 
     if (!(data.visitors && data.url)) return res.sendStatus(404);
 
@@ -37,18 +39,28 @@ class VisitorController {
   // }
 
   async getUserLocation(ip_address) {
+    console.log("\n 1 : this ip_address\n", ip_address, "\n");
     let res = {};
 
     const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
 
     const geolocationParams = new GeolocationParams();
-    geolocationParams.setIPAddress(ip_address);
+    geolocationParams.setIPAddress("1.1.1.1" || ip_address);
 
     ipgeolocationApi.getGeolocation((json) => {
       const { country_name, city } = json;
 
       res = { country_name, city };
+
+      console.log("\n 2 : this res in geolocation\n", res, "\n");
+      return res;
     }, geolocationParams);
+
+    // while (!res.country_name || !res.city) {
+    //   console.log("no res", res);
+    // }
+
+    console.log("\n 3 : this res out of geolocation\n", res, "\n");
 
     return res;
   }
@@ -57,20 +69,28 @@ class VisitorController {
     try {
       await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
         async ({ country_name, city }) => {
+          console.log(
+            "\n 4 : this incoming res\n",
+            { country_name, city },
+            "\n"
+          );
           await this.urlService
             .getUrlByShortUrl(short_url)
             .then(async (res) => {
               const url = res.dataValues || res;
               const visitor = {
                 location:
-                  (country_name || "Cameroon") + "-" + (city || "Yaounde"),
+                  (country_name || "*Cameroon") + "-" + (city || "*Yaounde"),
                 ip_address: req.ip || req.socket.remoteAddress,
                 time_clicked: new Date().toLocaleString(),
-                browser: req.headers["user-agent"],
+                browser: req.headers["user-agent"] || "unknown-browser",
                 UrlId: url.id,
               };
 
+              console.log("\n 5 : this visitor\n", visitor, "\n");
+
               await this.visitorService.registerOneVisitor(visitor);
+              return visitor;
             });
         }
       );
