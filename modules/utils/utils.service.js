@@ -34,7 +34,7 @@ class UtilService {
 
       return { statusCode: 200, long_url };
     } catch {
-      throw new Error("COULD_NOT_REDIRECT");
+      throw new Error("PAGE_NOT_FOUND");
     }
   }
 }

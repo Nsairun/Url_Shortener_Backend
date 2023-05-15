@@ -110,7 +110,7 @@ const visitorController = new VisitorController();
 
 router.get("/", visitorController.getAllVistors.bind(visitorController));
 
-router.get("/:id", visitorController.getVisitorsByUrlId.bind(visitorController));
+router.get("/:id", visitorController.getVisitorsByUrlIdOrshort.bind(visitorController));
 
 router.delete("/:id", visitorController.deleteOneVisitor.bind(visitorController));
 

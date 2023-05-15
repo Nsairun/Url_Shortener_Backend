@@ -1,9 +1,5 @@
-const IPGeolocationAPI = require("ip-geolocation-api-javascript-sdk");
-const GeolocationParams = require("ip-geolocation-api-javascript-sdk/GeolocationParams");
-
 const VisitorService = require("./Visitor.service");
 const UrlService = require("../urls/url.service");
-const { IPGEOLOCATION_API_KEY } = require("../services/constant");
 
 class VisitorController {
   constructor() {
@@ -19,67 +15,34 @@ class VisitorController {
     res.status(200).send(allVisitors);
   }
 
-  async getVisitorsByUrlId(req, res) {
-    const visitor = await this.visitorService.getVisitorsByUrlId(
-      +req.params.id
+  async getVisitorsByUrlIdOrshort(req, res) {
+    const data = await this.visitorService.getVisitorsByUrlIdOrshort(
+      req.params.id
     );
 
-    if (!visitor) return res.sendStatus(404);
+    if (!(data.visitors && data.url)) return res.sendStatus(404);
 
-    res.status(200).send(visitor);
-  }
-
-  // function handleResponse(json) {
-  //   // i prolly could still write a call back in ipgeolocationApi.getGeolocation(handleResponse, geolocationParams);
-  //   const { country_name, city } = json;
-
-  //   res = { country_name, city };
-
-  //   console.log("\n this json", res, "\n");
-  // }
-
-  async getUserLocation(ip_address) {
-    let res = {};
-
-    const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
-
-    const geolocationParams = new GeolocationParams();
-    geolocationParams.setIPAddress(ip_address);
-
-    ipgeolocationApi.getGeolocation((json) => {
-      const { country_name, city } = json;
-
-       res = { country_name, city };
-    }, geolocationParams);
-
-    return res;
+    res.status(200).send(data);
   }
 
   async createOneVisitor(req, short_url) {
-    try {
-      await this.getUserLocation(req.socket.remoteAddress || req.ip).then(
-        async ({ country_name, city }) => {
-          console.log(3);
-          await this.urlService
-            .getUrlByShortUrl(short_url)
-            .then(async (res) => {
-              const url = res.dataValues || res;
-              const visitor = {
-                location:
-                  (country_name || "Cameroon") + "-" + (city || "Yaounde"),
-                ip_address: req.socket.remoteAddress || req.ip,
-                time_clicked: new Date().toLocaleString(),
-                browser: req.headers["user-agent"],
-                UrlId: url.id,
-              };
+    return this.visitorService
+      .getUserLocation(req.socket.remoteAddress || req.ip)
+      .then(async ({ country_name, city }) => {
+        await this.urlService.getUrlByShortUrl(short_url).then(async (res) => {
+          const url = res.dataValues || res;
+          const visitor = {
+            location: (country_name || "Unknown") + " - " + (city || "unknown"),
+            ip_address: req.ip || req.socket.remoteAddress,
+            time_clicked: new Date().toLocaleString(),
+            browser: req.headers["user-agent"] || "unknown-browser",
+            UrlId: url.id,
+          };
 
-              await this.visitorService.registerOneVisitor(visitor);
-            });
-        }
-      );
-    } catch (err) {
-      throw err;
-    }
+          await this.visitorService.registerOneVisitor(visitor);
+          return visitor;
+        });
+      });
   }
 
   async deleteOneVisitor(req, res) {
