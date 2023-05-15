@@ -1,5 +1,9 @@
+const IPGeolocationAPI = require("ip-geolocation-api-javascript-sdk");
+const GeolocationParams = require("ip-geolocation-api-javascript-sdk/GeolocationParams");
+
 const UrlRepository = require("../urls/url.repo");
 const VisitorRepository = require("./visitor.repo");
+const { IPGEOLOCATION_API_KEY } = require("../services/constant");
 
 class VisitorService {
   constructor() {
@@ -32,26 +36,12 @@ class VisitorService {
 
   async registerOneVisitor(visitor) {
     try {
-      const duplicateVisit = await this.visitorRepo.getOneByIpAndUrldId(
-        visitor.ip_address,
-        visitor.UrlId,
-        visitor.browser
-      );
-
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {
         const newUrl = url.dataValues || url;
         newUrl.clicks += 1;
 
         this.urlRepo.updateUrlClicks(newUrl, newUrl.id);
       });
-
-      if (duplicateVisit) {
-        await this.visitorRepo.updateVisitor(
-          visitor,
-          duplicateVisit.dataValues.id || duplicateVisit.id
-        );
-        return 208;
-      }
 
       await this.visitorRepo.createOneVisitor(visitor);
 
@@ -71,6 +61,16 @@ class VisitorService {
     } catch {
       throw new Error("COULD_NOT_DELETE_VISITOR");
     }
+  }
+
+  getUserLocation(ip_address) {
+    const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
+    const geolocationParams = new GeolocationParams();
+    geolocationParams.setIPAddress(ip_address);
+
+    return new Promise((resolve) =>
+      ipgeolocationApi.getGeolocation(resolve, geolocationParams)
+    );
   }
 }
 
