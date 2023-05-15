@@ -34,7 +34,8 @@ class VisitorService {
     try {
       const duplicateVisit = await this.visitorRepo.getOneByIpAndUrldId(
         visitor.ip_address,
-        visitor.UrlId
+        visitor.UrlId,
+        visitor.browser
       );
 
       await this.urlRepo.getUrlById(visitor.UrlId).then((url) => {

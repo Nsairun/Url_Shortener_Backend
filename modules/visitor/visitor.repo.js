@@ -6,10 +6,10 @@ class VisitorRepository {
     return Visitor.findAll();
   }
 
-  getOneByIpAndUrldId(ip_address, UrlId) {
+  getOneByIpAndUrldId(ip_address, UrlId, browser) {
     return Visitor.findOne({
       where: {
-        [Op.and]: [{ ip_address }, { UrlId }],
+        [Op.and]: [{ ip_address }, { UrlId }, { browser }],
       },
     });
 
