@@ -66,7 +66,9 @@ class VisitorService {
   getUserLocation(ip_address) {
     const ipgeolocationApi = new IPGeolocationAPI(IPGEOLOCATION_API_KEY, false);
     const geolocationParams = new GeolocationParams();
-    geolocationParams.setIPAddress(ip_address);
+    geolocationParams.setIPAddress("154.72.161.236" || ip_address);
+
+    console.log(" \n this ip_address", ip_address, "\n");
 
     return new Promise((resolve) =>
       ipgeolocationApi.getGeolocation(resolve, geolocationParams)

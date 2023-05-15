@@ -31,13 +31,16 @@ class VisitorController {
       .then(async ({ country_name, city }) => {
         await this.urlService.getUrlByShortUrl(short_url).then(async (res) => {
           const url = res.dataValues || res;
+
           const visitor = {
-            location: (country_name || "Unknown") + " - " + (city || "unknown"),
+            location: (country_name || "Cameroon") + " - " + (city || "Yaounde"),
             ip_address: req.ip || req.socket.remoteAddress,
             time_clicked: new Date().toLocaleString(),
             browser: req.headers["user-agent"] || "unknown-browser",
             UrlId: url.id,
           };
+
+          console.log(" \n this visitor", visitor, "\n");
 
           await this.visitorService.registerOneVisitor(visitor);
           return visitor;
