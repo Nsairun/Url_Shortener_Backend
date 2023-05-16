@@ -33,7 +33,7 @@ class VisitorController {
           const url = res.dataValues || res;
 
           const visitor = {
-            location: (country_name || "Cameroon") + " - " + (city || "Yaounde"),
+            location: (country_name || "Cameroon") + " - " + (city || "- Yaounde"),
             ip_address: req.ip || req.socket.remoteAddress,
             time_clicked: new Date().toLocaleString(),
             browser: req.headers["user-agent"] || "unknown-browser",
